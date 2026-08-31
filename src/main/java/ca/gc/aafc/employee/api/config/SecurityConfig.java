@@ -16,7 +16,7 @@ import ca.gc.aafc.employee.api.auth.JwtFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+	
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -24,8 +24,9 @@ public class SecurityConfig {
     
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // disabled in header-based authN; enabled in cookie-based authZ
-            .sessionManagement(session ->
+        http
+//        	.csrf(csrf -> csrf.disable()) // uncommented out in header-based authN
+        	.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> 
             	auth.requestMatchers(              // rule 1
