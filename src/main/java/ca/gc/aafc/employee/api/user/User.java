@@ -15,14 +15,13 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User {
-
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
     private String username;
     private String password;
-    private String role;
     
     @ManyToMany
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), 
@@ -31,13 +30,9 @@ public class User {
     
     protected User() {}
     
-//	public User(String username, String password, String role) {
-//		this.username = username;
-//		this.password = password;
-//		this.role = role;
-//	}
-	
-    
+    public String[] getRoleNames() {
+        return roles.stream().map(Role::getName).toArray(String[]::new);
+    }
     
 	public Long getId() {
 		return id;
@@ -63,11 +58,11 @@ public class User {
 		this.password = password;
 	}
 	
-	public String getRole() {
-		return role;
+	public Set<Role> getRoles() {
+		return roles;
 	}
 	
-	public void setRole(String role) {
-		this.role = role;
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 }

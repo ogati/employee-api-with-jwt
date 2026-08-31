@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import ca.gc.aafc.employee.api.auth.JwtFilter;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -21,15 +23,22 @@ public class SecurityConfig {
     }
     
 	@Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+    SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
+        http.csrf(csrf -> csrf.disable()) // disabled in header-based authN; enabled in cookie-based authZ
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> 
-            	auth.requestMatchers("/login").permitAll()
-	                .requestMatchers("/admin/**").hasRole("ADMIN")
-	                .anyRequest().authenticated());
-
+            	auth.requestMatchers(              // rule 1
+            			"/index.html",
+            			"/login",
+            			"/h2-console/**")
+            		.permitAll()
+	                .requestMatchers("/admin/**")  // rule 2
+	                .hasRole("ADMIN")
+	                .anyRequest()                  // rule 3
+	                .authenticated())
+            .headers(headers -> headers.frameOptions(frame -> frame.disable()));     // removed in prod
+        
         return http.build();
     }
 	

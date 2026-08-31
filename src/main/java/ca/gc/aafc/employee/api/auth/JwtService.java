@@ -15,13 +15,13 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-
+	
 	private final JwtProperties properties;
-
+	
     public JwtService(JwtProperties properties) {
         this.properties = properties;
     }
-
+    
     public String generateToken(UserDetails userDetails) {
     	return Jwts.builder()
                 .subject(userDetails.getUsername())
@@ -30,23 +30,23 @@ public class JwtService {
                 .signWith(key())
                 .compact();
     }
-
+    
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-
+    
     public boolean isTokenValid(String token, UserDetails userDetails) {
         String username = extractUsername(token);
 
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
-
-    public <T> T extractClaim(String token, Function<Claims, T> resolver) {
+    
+    private <T> T extractClaim(String token, Function<Claims, T> resolver) {
         Claims claims = extractAllClaims(token);
-
+        
         return resolver.apply(claims);
     }
-
+    
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(key())
@@ -54,7 +54,7 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
+    
     private boolean isTokenExpired(String token) {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
