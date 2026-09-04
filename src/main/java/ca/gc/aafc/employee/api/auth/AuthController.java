@@ -21,17 +21,11 @@ public class AuthController {
     
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
-        // Authenticate username/password
         Authentication authentication = authenticationManager.authenticate(
         		new UsernamePasswordAuthenticationToken(request.username(), request.password()));
-        
-        // Get authenticated user
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        
-        // Generate JWT
         String token = jwtService.generateToken(userDetails);
         
-        // Return JWT to client
         return new AuthResponse(token);
-    }
+	}
 }

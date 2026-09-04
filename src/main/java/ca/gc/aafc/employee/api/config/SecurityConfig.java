@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import ca.gc.aafc.employee.api.auth.JwtFilter;
 
@@ -24,22 +25,20 @@ public class SecurityConfig {
     
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
-        http
-//        	.csrf(csrf -> csrf.disable()) // uncommented out in header-based authN
+        http.csrf(csrf -> csrf.disable())
         	.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> 
-            	auth.requestMatchers(              // rule 1
-            			"/index.html",
-            			"/login",
-            			"/h2-console/**")
-            		.permitAll()
-	                .requestMatchers("/admin/**")  // rule 2
-	                .hasRole("ADMIN")
-	                .anyRequest()                  // rule 3
-	                .authenticated())
-            .headers(headers -> headers.frameOptions(frame -> frame.disable()));     // removed in prod
-        
+            	auth.requestMatchers(
+            			"/index.html", 
+            			"/login", 
+            			"/employees.html", 
+            			"/h2-console/**").permitAll()
+	                .requestMatchers("/admin/**").hasRole("ADMIN")
+	                .anyRequest().authenticated())
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+            .headers(headers -> headers.frameOptions(frame -> frame.disable())); // removed in prod
+		
         return http.build();
     }
 	

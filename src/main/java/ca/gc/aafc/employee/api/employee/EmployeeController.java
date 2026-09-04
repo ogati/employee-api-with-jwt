@@ -31,8 +31,8 @@ public class EmployeeController {
 	
 	@GetMapping
 	public ResponseEntity<List<EmployeeResponse>> getEmployees() {
-		List<EmployeeResponse> employees = // employeeService.search(criteria);
-				List.of(new EmployeeResponse(1L, "Lei Liu", 80000L, "IT"));
+		List<EmployeeResponse> employees = List.of(new EmployeeResponse(1L, "Lei Liu", 80000L, "IT"));
+		
 		return ResponseEntity.ok(employees);
 	}
 	

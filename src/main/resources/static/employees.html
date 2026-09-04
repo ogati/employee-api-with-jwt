@@ -1,0 +1,18 @@
+<script>
+async function fetchEmployees() {
+	const token = localStorage.getItem("jwt");
+	
+	const res = await fetch("/employees", {
+	    method: "GET",
+	    headers: {
+			"Content-Type": "application/json",
+	        "Authorization": `Bearer ${token}`
+	    },
+	});
+	
+	const data = await res.json();
+	document.write(`<pre>${JSON.stringify(data, null, 4)}</pre>`)
+}
+
+fetchEmployees();
+</script>
