@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ca.gc.aafc</groupId>
-	<artifactId>employee-api-with-jwt</artifactId>
+	<artifactId>jwt-header</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
