@@ -32,8 +32,8 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
     	// Avoid 403 on /favicon.ico and errors in console
-    	String s = request.getRequestURI();
-    	if (s.startsWith("/favicon.ico") || s.startsWith("/.well-known")) return;
+    	String uri = request.getRequestURI();
+    	if (uri.startsWith("/favicon.ico") || uri.startsWith("/.well-known")) return;
     	
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer ")) {
